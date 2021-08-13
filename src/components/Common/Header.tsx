@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState, useEffect, useRef } from 'react';
+import React, { FunctionComponent, useState } from 'react';
 import { Link } from 'gatsby';
 import styled from '@emotion/styled';
 import Logo from 'components/Main/Logo';
@@ -83,44 +83,13 @@ const MenuItem = styled.div`
   }
 `;
 
-const throttle = (callback, waitTime) => {
-  let timerId = null;
-  return e => {
-    if (timerId) return;
-    timerId = setTimeout(() => {
-      callback.call(this, e);
-      timerId = null;
-    }, waitTime);
-  };
-};
-
 const Header: FunctionComponent = () => {
-  const [hide, setHide] = useState(false);
-  const [pageY, setPageY] = useState(0);
-  const documentRef = useRef(document);
-
-  const handleScroll = () => {
-    const { pageYOffset } = window;
-    const deltaY = pageYOffset - pageY;
-    const hide = pageYOffset !== 0 && deltaY >= 0;
-    setHide(hide);
-    setPageY(pageYOffset);
-  };
-
-  const throttleScroll = throttle(handleScroll, 50);
-
-  useEffect(() => {
-    documentRef.current.addEventListener('scroll', throttleScroll);
-    return () =>
-      documentRef.current.removeEventListener('scroll', throttleScroll);
-  }, [pageY]);
-
   const [dropdown, setDropdown] = useState(false);
   const showDropdown = () => setDropdown(!dropdown);
 
   return (
     <>
-      <HeaderWrapper className={hide ? 'hide' : ''}>
+      <HeaderWrapper>
         <Logo />
         <LogoHoriz />
         <MenuBtn onClick={showDropdown}>
